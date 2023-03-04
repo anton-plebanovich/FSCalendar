@@ -24,10 +24,6 @@
 - (void)performAlphaAnimationWithProgress:(CGFloat)progress;
 - (void)performPathAnimationWithProgress:(CGFloat)progress;
 
-- (void)scopeTransitionDidBegin:(UIPanGestureRecognizer *)panGesture;
-- (void)scopeTransitionDidUpdate:(UIPanGestureRecognizer *)panGesture;
-- (void)scopeTransitionDidEnd:(UIPanGestureRecognizer *)panGesture;
-
 - (void)boundingRectWillChange:(CGRect)targetBounds animated:(BOOL)animated;
 
 @end
@@ -111,6 +107,8 @@
     if (self.state != FSCalendarTransitionStateIdle) return;
     
     self.beginPoint = [panGesture translationInView:panGesture.view];
+    self.collectionView.clipsToBounds = YES;
+    self.collectionView.superview.clipsToBounds = YES;
     
     CGPoint velocity = [panGesture velocityInView:panGesture.view];
     if (self.calendar.scope == FSCalendarScopeMonth && velocity.y >= 0) {
@@ -348,11 +346,15 @@
                 [self boundingRectWillChange:attr.targetBounds animated:YES];
             } completion:^(BOOL finished) {
                 [self performTransitionCompletionAnimated:YES];
+                self.collectionView.clipsToBounds = NO;
+                self.collectionView.superview.clipsToBounds = NO;
             }];
         }
     } else {
         [self performTransitionCompletionAnimated:animated];
         [self boundingRectWillChange:attr.targetBounds animated:animated];
+        self.collectionView.clipsToBounds = NO;
+        self.collectionView.superview.clipsToBounds = NO;
     }
 }
 

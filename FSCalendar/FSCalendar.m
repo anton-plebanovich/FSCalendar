@@ -196,7 +196,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     
     UIView *daysContainer = [[UIView alloc] initWithFrame:CGRectZero];
     daysContainer.backgroundColor = [UIColor clearColor];
-    daysContainer.clipsToBounds = YES;
+    daysContainer.clipsToBounds = NO;
     [contentView addSubview:daysContainer];
     self.daysContainer = daysContainer;
     
@@ -213,7 +213,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     collectionView.showsHorizontalScrollIndicator = NO;
     collectionView.showsVerticalScrollIndicator = NO;
     collectionView.allowsMultipleSelection = NO;
-    collectionView.clipsToBounds = YES;
+    collectionView.clipsToBounds = NO;
     [collectionView registerClass:[FSCalendarCell class] forCellWithReuseIdentifier:FSCalendarDefaultCellReuseIdentifier];
     [collectionView registerClass:[FSCalendarBlankCell class] forCellWithReuseIdentifier:FSCalendarBlankCellReuseIdentifier];
     [collectionView registerClass:[FSCalendarStickyHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
@@ -300,7 +300,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         CGFloat headerHeight = self.preferredHeaderHeight;
         CGFloat weekdayHeight = self.preferredWeekdayHeight;
         CGFloat rowHeight = self.preferredRowHeight;
-        CGFloat padding = 5;
+        CGFloat paddings = self.collectionViewLayout.sectionInsets.top + self.collectionViewLayout.sectionInsets.bottom;
         if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
             rowHeight = FSCalendarFloor(rowHeight*2)*0.5; // Round to nearest multiple of 0.5. e.g. (16.8->16.5),(16.2->16.0)
         }
@@ -313,13 +313,13 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         if (!self.floatingMode) {
             switch (self.transitionCoordinator.representingScope) {
                 case FSCalendarScopeMonth: {
-                    CGFloat contentHeight = rowHeight*6 + padding*2;
+                    CGFloat contentHeight = rowHeight*6 + paddings;
                     _daysContainer.frame = CGRectMake(0, headerHeight+weekdayHeight, self.fs_width, contentHeight);
                     _collectionView.frame = CGRectMake(0, 0, _daysContainer.fs_width, contentHeight);
                     break;
                 }
                 case FSCalendarScopeWeek: {
-                    CGFloat contentHeight = rowHeight + padding*2;
+                    CGFloat contentHeight = rowHeight + paddings;
                     _daysContainer.frame = CGRectMake(0, headerHeight+weekdayHeight, self.fs_width, contentHeight);
                     _collectionView.frame = CGRectMake(0, 0, _daysContainer.fs_width, contentHeight);
                     break;
@@ -932,9 +932,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         CGFloat headerHeight = self.preferredHeaderHeight;
         CGFloat weekdayHeight = self.preferredWeekdayHeight;
         CGFloat contentHeight = self.transitionCoordinator.cachedMonthSize.height-headerHeight-weekdayHeight;
-        CGFloat padding = 5;
+        CGFloat paddings = self.collectionViewLayout.sectionInsets.top + self.collectionViewLayout.sectionInsets.bottom;
         if (!self.floatingMode) {
-            _preferredRowHeight = (contentHeight-padding*2)/6.0;
+            _preferredRowHeight = (contentHeight-paddings)/6.0;
         } else {
             _preferredRowHeight = _rowHeight;
         }
@@ -1011,6 +1011,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 {
     if (self.floatingMode) return;
     if (self.transitionCoordinator.state != FSCalendarTransitionStateIdle) return;
+    
+    self.collectionView.clipsToBounds = YES;
+    self.collectionView.superview.clipsToBounds = YES;
     
     [self performEnsuringValidLayout:^{
         [self.transitionCoordinator performScopeTransitionFromScope:self.scope toScope:scope animated:animated];
