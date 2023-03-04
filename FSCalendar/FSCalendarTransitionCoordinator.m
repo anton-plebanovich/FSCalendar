@@ -131,7 +131,13 @@
 {
     if (self.state != FSCalendarTransitionStateChanging) return;
     
-    CGFloat translation = ABS([panGesture translationInView:panGesture.view].y);
+    CGFloat translation = [panGesture translationInView:panGesture.view].y;
+    if (self.calendar.scope == FSCalendarScopeWeek) {
+        translation = MAX(0, translation);
+    } else {
+        translation = MAX(0, -translation);
+    }
+    
     CGFloat progress = ({
         CGFloat maxTranslation = ABS(CGRectGetHeight(self.transitionAttributes.targetBounds) - CGRectGetHeight(self.transitionAttributes.sourceBounds));
         translation = MIN(maxTranslation, translation);
@@ -148,7 +154,7 @@
     if (self.state != FSCalendarTransitionStateChanging) return;
     
     self.state = FSCalendarTransitionStateFinishing;
-
+    
     CGFloat translation = [panGesture translationInView:panGesture.view].y;
     CGFloat velocity = [panGesture velocityInView:panGesture.view].y;
     
@@ -159,7 +165,7 @@
         CGFloat progress = translation/maxTranslation;
         progress;
     });
-    if (velocity * translation < 0) {
+    if (velocity * translation <= 0) {
         [self.transitionAttributes revert];
     }
     [self performTransition:self.transitionAttributes.targetScope fromProgress:progress toProgress:1.0 animated:YES];
@@ -411,12 +417,12 @@
     CGRect tempRect = self.sourceBounds;
     self.sourceBounds = self.targetBounds;
     self.targetBounds = tempRect;
-
+    
     NSDate *tempDate = self.sourcePage;
     self.sourcePage = self.targetPage;
     self.targetPage = tempDate;
     
     self.targetScope = 1 - self.targetScope;
 }
-    
+
 @end
