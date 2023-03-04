@@ -122,11 +122,11 @@
             if (!self.calendar.floatingMode) {
                 switch (self.calendar.transitionCoordinator.representingScope) {
                     case FSCalendarScopeMonth: {
-                        height = (self.collectionView.fs_height-self.sectionInsets.top-self.sectionInsets.bottom)/6.0;
+                        height = (self.collectionView.fs_height-self.sectionInsets.top-self.sectionInsets.bottom-10)/6.0;
                         break;
                     }
                     case FSCalendarScopeWeek: {
-                        height = (self.collectionView.fs_height-self.sectionInsets.top-self.sectionInsets.bottom);
+                        height = (self.collectionView.fs_height-self.sectionInsets.top-self.sectionInsets.bottom-10);
                         break;
                     }
                     default:
@@ -171,7 +171,7 @@
         size_t rowSize = sizeof(CGFloat)*rowCount;
         CGFloat *heights = malloc(rowSize);
         if (!self.calendar.floatingMode) {
-            CGFloat contentHeight = self.collectionView.fs_height - self.sectionInsets.top - self.sectionInsets.bottom;
+            CGFloat contentHeight = self.collectionView.fs_height - self.sectionInsets.top - self.sectionInsets.bottom - 10;
             FSCalendarSliceCake(contentHeight, rowCount, heights);
         } else {
             for (int i = 0; i < rowCount; i++) {
