@@ -12,11 +12,10 @@
 
 @interface FSCalendarTransitionCoordinator ()
 
+@property (assign, nonatomic) CGPoint beginPoint;
 @property (weak, nonatomic) FSCalendarCollectionView *collectionView;
 @property (weak, nonatomic) FSCalendarCollectionViewLayout *collectionViewLayout;
 @property (weak, nonatomic) FSCalendar *calendar;
-
-@property (strong, nonatomic) FSCalendarTransitionAttributes *transitionAttributes;
 
 - (FSCalendarTransitionAttributes *)createTransitionAttributesTargetingScope:(FSCalendarScope)targetScope;
 
@@ -111,6 +110,8 @@
 {
     if (self.state != FSCalendarTransitionStateIdle) return;
     
+    self.beginPoint = [panGesture translationInView:panGesture.view];
+    
     CGPoint velocity = [panGesture velocityInView:panGesture.view];
     if (self.calendar.scope == FSCalendarScopeMonth && velocity.y >= 0) {
         return;
@@ -131,7 +132,7 @@
 {
     if (self.state != FSCalendarTransitionStateChanging) return;
     
-    CGFloat translation = [panGesture translationInView:panGesture.view].y;
+    CGFloat translation = [panGesture translationInView:panGesture.view].y - self.beginPoint.y;
     if (self.calendar.scope == FSCalendarScopeWeek) {
         translation = MAX(0, translation);
     } else {
@@ -155,6 +156,7 @@
     
     self.state = FSCalendarTransitionStateFinishing;
     
+    self.beginPoint = CGPointZero;
     CGFloat translation = [panGesture translationInView:panGesture.view].y;
     CGFloat velocity = [panGesture velocityInView:panGesture.view].y;
     

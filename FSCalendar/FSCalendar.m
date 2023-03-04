@@ -361,13 +361,16 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     CGFloat paddings = self.collectionViewLayout.sectionInsets.top + self.collectionViewLayout.sectionInsets.bottom;
     
     if (!self.floatingMode) {
+        CGFloat scale = [UIScreen mainScreen].scale;
         switch (scope) {
             case FSCalendarScopeMonth: {
                 CGFloat height = weekdayHeight + headerHeight + [self.calculator numberOfRowsInMonth:_currentPage]*rowHeight + paddings;
+                height = round(height * scale) / scale;
                 return CGSizeMake(size.width, height);
             }
             case FSCalendarScopeWeek: {
                 CGFloat height = weekdayHeight + headerHeight + rowHeight + paddings;
+                height = round(height * scale) / scale;
                 return CGSizeMake(size.width, height);
             }
         }
