@@ -37,6 +37,7 @@
         self.contentView = view;
         
         label = [[UILabel alloc] initWithFrame:CGRectZero];
+        label.adjustsFontForContentSizeCategory = YES;
         label.textAlignment = NSTextAlignmentCenter;
         label.numberOfLines = 0;
         [_contentView addSubview:label];

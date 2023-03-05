@@ -53,12 +53,14 @@
     FSCalendarEventIndicator *eventIndicator;
     
     label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
     [self.contentView addSubview:label];
     self.titleLabel = label;
     
     label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor lightGrayColor];
     [self.contentView addSubview:label];
