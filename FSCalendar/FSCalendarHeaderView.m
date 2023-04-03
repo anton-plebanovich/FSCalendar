@@ -197,6 +197,7 @@
         text = text.capitalizedString;
     }
     cell.titleLabel.text = text;
+    cell.accessibilityLabel = cell.titleLabel.text;
     [cell setNeedsLayout];
 }
 
