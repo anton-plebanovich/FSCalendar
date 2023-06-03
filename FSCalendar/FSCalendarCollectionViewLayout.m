@@ -440,7 +440,11 @@
             frame;
         });
         attributes.frame = frame;
-        self.itemAttributes[indexPath] = attributes;
+        
+        // Prevents crash on `indexPath == nil`
+        if (indexPath) {
+            self.itemAttributes[indexPath] = attributes;
+        }
     }
     return attributes;
 }
