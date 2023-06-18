@@ -432,20 +432,36 @@ OFFSET_PROPERTY(preferredEventOffset, PreferredEventOffset, _appearance.eventOff
 {
     if (![_color isEqual:color]) {
         _color = color;
-        
-        if ([_color isKindOfClass:[UIColor class]]) {
-            for (NSInteger i = 0; i < self.eventLayers.count; i++) {
-                CALayer *layer = [self.eventLayers pointerAtIndex:i];
-                layer.backgroundColor = [_color CGColor];
-            }
-        } else if ([_color isKindOfClass:[NSArray class]]) {
-            NSArray<UIColor *> *colors = (NSArray *)_color;
-            for (int i = 0; i < self.eventLayers.count; i++) {
-                CALayer *eventLayer = [self.eventLayers pointerAtIndex:i];
-                eventLayer.backgroundColor = colors[MIN(i,colors.count-1)].CGColor;
-            }
+        [self updateEventColors];
+    }
+}
+
+- (void)updateEventColors
+{
+    if ([_color isKindOfClass:[UIColor class]]) {
+        for (NSInteger i = 0; i < self.eventLayers.count; i++) {
+            CALayer *layer = [self.eventLayers pointerAtIndex:i];
+            layer.backgroundColor = [_color CGColor];
         }
-        
+    } else if ([_color isKindOfClass:[NSArray class]]) {
+        NSArray<UIColor *> *colors = (NSArray *)_color;
+        for (int i = 0; i < self.eventLayers.count; i++) {
+            CALayer *eventLayer = [self.eventLayers pointerAtIndex:i];
+            eventLayer.backgroundColor = colors[MIN(i,colors.count-1)].CGColor;
+        }
+    }
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    if (@available(iOS 13.0, *)) {
+        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
+            [self updateEventColors];
+        }
+    } else {
+        [self updateEventColors];
     }
 }
 
