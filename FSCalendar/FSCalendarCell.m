@@ -46,7 +46,7 @@
 }
 
 - (void)commonInit
-{   
+{
     UILabel *label;
     CAShapeLayer *shapeLayer;
     UIImageView *imageView;
@@ -171,7 +171,7 @@
 - (void)performSelecting
 {
     _shapeLayer.opacity = 1;
-        
+    
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *zoomOut = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     zoomOut.fromValue = @0.3;
@@ -222,12 +222,12 @@
     }
     if (!shouldHideShapeLayer) {
         
-        CGColorRef cellFillColor = self.colorForCellFill.CGColor;
+        CGColorRef cellFillColor = [self.colorForCellFill resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
         if (!CGColorEqualToColor(_shapeLayer.fillColor, cellFillColor)) {
             _shapeLayer.fillColor = cellFillColor;
         }
         
-        CGColorRef cellBorderColor = self.colorForCellBorder.CGColor;
+        CGColorRef cellBorderColor = [self.colorForCellBorder resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
         if (!CGColorEqualToColor(_shapeLayer.strokeColor, cellBorderColor)) {
             _shapeLayer.strokeColor = cellBorderColor;
         }
@@ -251,7 +251,7 @@
     
     _eventIndicator.numberOfEvents = self.numberOfEvents;
     _eventIndicator.color = self.colorsForEvents;
-
+    
 }
 
 - (UIColor *)colorForCurrentStateInDictionary:(NSDictionary *)dictionary
@@ -363,6 +363,19 @@ OFFSET_PROPERTY(preferredEventOffset, PreferredEventOffset, _appearance.eventOff
         if (diff) {
             [self setNeedsLayout];
         }
+    }
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+    [super traitCollectionDidChange:previousTraitCollection];
+    
+    if (@available(iOS 13.0, *)) {
+        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
+            [self configureAppearance];
+        }
+    } else {
+        [self configureAppearance];
     }
 }
 
