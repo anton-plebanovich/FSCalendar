@@ -709,7 +709,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         _today = nil;
     } else {
         FSCalendarAssertDateInBounds(today,self.gregorian,self.minimumDate,self.maximumDate);
-        [self updateToday];
+        [self updateToday: today];
     }
     if (self.hasValidateVisibleLayout) {
         [self.visibleCells makeObjectsPerformSelector:@selector(setDateIsToday:) withObject:nil];
@@ -1284,12 +1284,16 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     _formatter.timeZone = _timeZone;
     _formatter.locale = _locale;
     
-    [self updateToday];
+    [self updateToday: nil];
 }
 
-- (void)updateToday
+- (void)updateToday:(nullable NSDate *)today
 {
-    NSDateComponents *dateComponents = [self.gregorian components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:[NSDate date]];
+    if (today == nil) {
+        today = [NSDate date];
+    }
+    
+    NSDateComponents *dateComponents = [self.gregorian components:(NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay) fromDate:today];
     dateComponents.hour = 0;
     dateComponents.minute = 0;
     dateComponents.second = 0;
