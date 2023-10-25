@@ -518,7 +518,6 @@ IB_DESIGNABLE
 @end
 
 
-IB_DESIGNABLE
 @interface FSCalendar (IBExtension)
 
 #if TARGET_INTERFACE_BUILDER
