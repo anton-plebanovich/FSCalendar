@@ -50,6 +50,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 
 @property (strong, nonatomic) NSCalendar *gregorian;
 @property (strong, nonatomic) NSDateFormatter *formatter;
+@property (strong, nonatomic) NSDateFormatter *textFormatter;
 
 @property (weak  , nonatomic) UIView                     *contentView;
 @property (weak  , nonatomic) UIView                     *daysContainer;
@@ -151,6 +152,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     _gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     _formatter = [[NSDateFormatter alloc] init];
     _formatter.dateFormat = @"yyyy-MM-dd";
+    
+    _textFormatter = [[NSDateFormatter alloc] init];
+    
     _locale = [NSLocale currentLocale];
     _timeZone = [NSTimeZone defaultTimeZone];
     _firstWeekday = 1;

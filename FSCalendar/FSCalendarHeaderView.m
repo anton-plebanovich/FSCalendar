@@ -157,7 +157,7 @@
     cell.titleLabel.font = appearance.headerTitleFont;
     cell.titleLabel.textColor = appearance.headerTitleColor;
     cell.titleLabel.textAlignment = appearance.headerTitleAlignment; 
-    _calendar.formatter.dateFormat = appearance.headerDateFormat;
+    _calendar.textFormatter.dateFormat = appearance.headerDateFormat;
     NSString *text = nil;
     switch (self.calendar.transitionCoordinator.representingScope) {
         case FSCalendarScopeMonth: {
@@ -167,11 +167,11 @@
                     text = nil;
                 } else {
                     NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item-1 toDate:self.calendar.minimumDate options:0];
-                    text = [_calendar.formatter stringFromDate:date];
+                    text = [_calendar.textFormatter stringFromDate:date];
                 }
             } else {
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitMonth value:indexPath.item toDate:self.calendar.minimumDate options:0];
-                text = [_calendar.formatter stringFromDate:date];
+                text = [_calendar.textFormatter stringFromDate:date];
             }
             break;
         }
@@ -181,7 +181,7 @@
             } else {
                 NSDate *firstPage = [self.calendar.gregorian fs_middleDayOfWeek:self.calendar.minimumDate];
                 NSDate *date = [self.calendar.gregorian dateByAddingUnit:NSCalendarUnitWeekOfYear value:indexPath.item-1 toDate:firstPage options:0];
-                text = [_calendar.formatter stringFromDate:date];
+                text = [_calendar.textFormatter stringFromDate:date];
             }
             break;
         }
