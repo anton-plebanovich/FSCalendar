@@ -222,14 +222,22 @@
     }
     if (!shouldHideShapeLayer) {
         
-        CGColorRef cellFillColor = [self.colorForCellFill resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
-        if (!CGColorEqualToColor(_shapeLayer.fillColor, cellFillColor)) {
-            _shapeLayer.fillColor = cellFillColor;
+        if (@available(iOS 13.0, *)) {
+            CGColorRef cellFillColor = [self.colorForCellFill resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
+            if (!CGColorEqualToColor(_shapeLayer.fillColor, cellFillColor)) {
+                _shapeLayer.fillColor = cellFillColor;
+            }
+        } else {
+            // Fallback on earlier versions
         }
         
-        CGColorRef cellBorderColor = [self.colorForCellBorder resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
-        if (!CGColorEqualToColor(_shapeLayer.strokeColor, cellBorderColor)) {
-            _shapeLayer.strokeColor = cellBorderColor;
+        if (@available(iOS 13.0, *)) {
+            CGColorRef cellBorderColor = [self.colorForCellBorder resolvedColorWithTraitCollection:[self traitCollection]].CGColor;
+            if (!CGColorEqualToColor(_shapeLayer.strokeColor, cellBorderColor)) {
+                _shapeLayer.strokeColor = cellBorderColor;
+            }
+        } else {
+            // Fallback on earlier versions
         }
         
         CGPathRef path = [UIBezierPath bezierPathWithRoundedRect:_shapeLayer.bounds

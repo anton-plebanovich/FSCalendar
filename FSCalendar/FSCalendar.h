@@ -242,6 +242,8 @@ NS_ASSUME_NONNULL_BEGIN
 IB_DESIGNABLE
 @interface FSCalendar : UIView
 
+@property (weak, nonatomic) FSCalendarCollectionView *collectionView;
+
 /**
  * The timezone of the calendar. `defaultTimeZone` by default.
  */
