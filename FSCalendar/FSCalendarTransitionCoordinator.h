@@ -31,7 +31,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarTransitionState) {
 - (instancetype _Nonnull)initWithCalendar:(FSCalendar *_Nonnull)calendar;
 
 - (void)performScopeTransitionFromScope:(FSCalendarScope)fromScope toScope:(FSCalendarScope)toScope animated:(BOOL)animated;
-- (void)performBoundingRectTransitionFromMonth:(NSDate *_Nonnull)fromMonth toMonth:(NSDate *_Nonnull)toMonth duration:(CGFloat)duration;
+- (void)performBoundingRectTransitionFromMonth:(NSDate *_Nullable)fromMonth toMonth:(NSDate *_Nonnull)toMonth duration:(CGFloat)duration;
 - (CGRect)boundingRectForScope:(FSCalendarScope)scope page:(NSDate *_Nonnull)page;
 
 - (void)handleScopeGesture:(id _Nonnull)sender;
