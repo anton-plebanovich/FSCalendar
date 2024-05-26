@@ -563,7 +563,10 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         CGPoint significantPoint = CGPointMake(_collectionView.fs_width*0.5,MIN(self.collectionViewLayout.estimatedItemSize.height*2.75, _collectionView.fs_height*0.5)+_collectionView.contentOffset.y);
         NSIndexPath *significantIndexPath = [_collectionView indexPathForItemAtPoint:significantPoint];
         if (significantIndexPath) {
-            currentPage = [self.gregorian dateByAddingUnit:NSCalendarUnitMonth value:significantIndexPath.section toDate:[self.gregorian fs_firstDayOfMonth:_minimumDate] options:0];
+            NSDate *newCurrentPage = [self.gregorian dateByAddingUnit:NSCalendarUnitMonth value:significantIndexPath.section toDate:[self.gregorian fs_firstDayOfMonth:_minimumDate] options:0];
+            if (newCurrentPage) { // Safety check
+                currentPage = newCurrentPage;
+            }
         } else {
             FSCalendarStickyHeader *significantHeader = [self.visibleStickyHeaders filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(FSCalendarStickyHeader * _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
                 return CGRectContainsPoint(evaluatedObject.frame, significantPoint);
@@ -573,7 +576,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             }
         }
         
-        if (![self.gregorian isDate:currentPage equalToDate:_currentPage toUnitGranularity:NSCalendarUnitMonth]) {
+        if (currentPage && ![self.gregorian isDate:currentPage equalToDate:_currentPage toUnitGranularity:NSCalendarUnitMonth]) {
             [self willChangeValueForKey:@"currentPage"];
             _currentPage = currentPage;
             [self.delegateProxy calendarCurrentPageDidChange:self];
@@ -630,7 +633,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         }
     }
     BOOL shouldTriggerPageChange = [self isDateInDifferentPage:targetPage];
-    if (shouldTriggerPageChange) {
+    if (targetPage && shouldTriggerPageChange) {
         NSDate *lastPage = _currentPage;
         [self willChangeValueForKey:@"currentPage"];
         _currentPage = targetPage;
@@ -735,7 +738,11 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 {
     [self requestBoundingDatesIfNecessary];
     if (self.floatingMode || [self isDateInDifferentPage:currentPage]) {
-        currentPage = [self.gregorian startOfDayForDate:currentPage];
+        NSDate *newCurrentPage = [self.gregorian startOfDayForDate:currentPage];
+        if (newCurrentPage) { // Safety
+            currentPage = newCurrentPage;
+        }
+        
         if ([self isPageInRange:currentPage]) {
             [self scrollToPageForDate:currentPage animated:animated];
         }
@@ -1199,11 +1206,17 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             NSDate *lastPage = _currentPage;
             switch (self.transitionCoordinator.representingScope) {
                 case FSCalendarScopeMonth: {
-                    _currentPage = [self.gregorian fs_firstDayOfMonth:date];
+                    NSDate *newCurrentPage = [self.gregorian fs_firstDayOfMonth:date];
+                    if (newCurrentPage) { // safety
+                        _currentPage = newCurrentPage;
+                    }
                     break;
                 }
                 case FSCalendarScopeWeek: {
-                    _currentPage = [self.gregorian fs_firstDayOfWeek:date];
+                    NSDate *newCurrentPage = [self.gregorian fs_firstDayOfWeek:date];
+                    if (newCurrentPage) { // safety
+                        _currentPage = newCurrentPage;
+                    }
                     break;
                 }
             }

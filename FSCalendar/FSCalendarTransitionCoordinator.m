@@ -260,7 +260,10 @@
                 [dates addObject:self.calendar.today];
             }
             if (targetScope == FSCalendarScopeWeek) {
-                [dates addObject:self.calendar.currentPage];
+                // Not sure why but it looks like `currentPage` might be `nil` under some conditions so we just prevent crash below. Ideally, we need to catch the core issue
+                if (self.calendar.currentPage) {
+                    [dates addObject:self.calendar.currentPage];
+                }
             } else {
                 [dates addObject:[self.calendar.gregorian dateByAddingUnit:NSCalendarUnitDay value:3 toDate:self.calendar.currentPage options:0]];
             }
