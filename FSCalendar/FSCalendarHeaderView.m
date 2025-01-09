@@ -219,8 +219,8 @@
     if (self) {
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         titleLabel.adjustsFontForContentSizeCategory = YES;
-        titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        titleLabel.numberOfLines = 0;
+        titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        titleLabel.numberOfLines = 1;
         [self.contentView addSubview:titleLabel];
         self.titleLabel = titleLabel;
     }

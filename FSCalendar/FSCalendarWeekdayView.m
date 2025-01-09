@@ -52,6 +52,7 @@
         UILabel *weekdayLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         weekdayLabel.adjustsFontForContentSizeCategory = YES;
         weekdayLabel.textAlignment = NSTextAlignmentCenter;
+        weekdayLabel.lineBreakMode = NSLineBreakByClipping;
         [self.contentView addSubview:weekdayLabel];
         [_weekdayPointers addPointer:(__bridge void * _Nullable)(weekdayLabel)];
     }

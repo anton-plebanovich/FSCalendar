@@ -56,6 +56,7 @@
     label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
+    label.lineBreakMode = NSLineBreakByClipping;
     [self.contentView addSubview:label];
     self.titleLabel = label;
     
@@ -63,6 +64,7 @@
     label.adjustsFontForContentSizeCategory = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor lightGrayColor];
+    label.lineBreakMode = NSLineBreakByClipping;
     [self.contentView addSubview:label];
     self.subtitleLabel = label;
     
