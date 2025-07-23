@@ -743,7 +743,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             currentPage = newCurrentPage;
         }
         
-        if ([self isPageInRange:currentPage]) {
+        if (currentPage && [self isPageInRange:currentPage]) {
             [self scrollToPageForDate:currentPage animated:animated];
         }
     }
