@@ -267,7 +267,7 @@ IB_DESIGNABLE
  *
  * @desc In week mode, current page represents the current visible week; In month mode, it means current visible month.
  */
-@property (strong, nonatomic) NSDate *currentPage;
+@property (nullable, strong, nonatomic) NSDate *currentPage;
 
 /**
  * The locale of month and weekday symbols. Change it to display them in your own language.
