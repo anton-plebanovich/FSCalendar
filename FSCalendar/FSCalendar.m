@@ -571,7 +571,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             FSCalendarStickyHeader *significantHeader = [self.visibleStickyHeaders filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(FSCalendarStickyHeader * _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
                 return CGRectContainsPoint(evaluatedObject.frame, significantPoint);
             }]].firstObject;
-            if (significantHeader.month) { // Safety check
+            if (significantHeader && significantHeader.month) { // Safety check
                 currentPage = significantHeader.month;
             }
         }
