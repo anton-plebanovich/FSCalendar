@@ -1165,7 +1165,10 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
         return;
     }
     animated &= _scrollEnabled; // No animation if _scrollEnabled == NO;
-    
+    // No animation off-window either. An animated scroll leaves the header to `scrollViewDidScroll:`,
+    // which returns early without a window, so the header would keep showing the previous page.
+    animated &= self.window != nil;
+
     date = [self.calculator safeDateForDate:date];
     NSInteger scrollOffset = [self.calculator indexPathForDate:date atMonthPosition:FSCalendarMonthPositionCurrent].section;
     
