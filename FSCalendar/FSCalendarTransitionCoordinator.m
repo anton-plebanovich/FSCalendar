@@ -259,13 +259,12 @@
             if (self.calendar.today) {
                 [dates addObject:self.calendar.today];
             }
-            if (targetScope == FSCalendarScopeWeek) {
-                // Not sure why but it looks like `currentPage` might be `nil` under some conditions so we just prevent crash below. Ideally, we need to catch the core issue
-                if (self.calendar.currentPage) {
+            if (self.calendar.currentPage) {
+                if (targetScope == FSCalendarScopeWeek) {
                     [dates addObject:self.calendar.currentPage];
+                } else {
+                    [dates addObject:[self.calendar.gregorian dateByAddingUnit:NSCalendarUnitDay value:3 toDate:self.calendar.currentPage options:0]];
                 }
-            } else {
-                [dates addObject:[self.calendar.gregorian dateByAddingUnit:NSCalendarUnitDay value:3 toDate:self.calendar.currentPage options:0]];
             }
             dates.copy;
         });
@@ -274,7 +273,11 @@
             NSInteger currentSection = [self.calendar.calculator indexPathForDate:self.calendar.currentPage scope:1-targetScope].section;
             return indexPath.section == currentSection;
         }]];
-        NSDate *date = visibleCandidates.firstObject;
+        // No candidate may lie on the current page: a month page stored while the scope was already
+        // week (`scrollToPageForDate:` during a transition sees `representingScope` as month), plus
+        // 3 days, crosses into the next week. A nil focused date gives a nil target page, which the
+        // transition then writes into `_currentPage`, so fall back to the page itself.
+        NSDate *date = visibleCandidates.firstObject ?: self.calendar.currentPage ?: self.calendar.today;
         date;
     });
     attributes.focusedRow = ({
@@ -336,7 +339,7 @@
     
     [self.calendar willChangeValueForKey:@"scope"];
     [self.calendar fs_setUnsignedIntegerVariable:targetScope forKey:@"_scope"];
-    if (targetScope == FSCalendarScopeWeek) {
+    if (targetScope == FSCalendarScopeWeek && attr.targetPage) {
         [self.calendar fs_setVariable:attr.targetPage forKey:@"_currentPage"];
     }
     [self.calendar didChangeValueForKey:@"scope"];
@@ -399,7 +402,9 @@
 
 - (void)prepareWeekToMonthTransition
 {
-    [self.calendar fs_setVariable:self.transitionAttributes.targetPage forKey:@"_currentPage"];
+    if (self.transitionAttributes.targetPage) {
+        [self.calendar fs_setVariable:self.transitionAttributes.targetPage forKey:@"_currentPage"];
+    }
     self.calendar.contentView.fs_height = CGRectGetHeight(self.transitionAttributes.targetBounds);
     self.collectionViewLayout.scrollDirection = (UICollectionViewScrollDirection)self.calendar.scrollDirection;
     self.calendar.calendarHeaderView.scrollDirection = self.collectionViewLayout.scrollDirection;
